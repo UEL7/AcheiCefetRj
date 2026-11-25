@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b3a">
+  <title>AcheiCefetRJ — Achados e Perdidos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-icon">⌕</span><span>Achei<span class="gold">CefetRJ</span></span></a>
+    <div class="account-area">
+      <span id="user-label" class="user-label">Visitante</span>
+      <button id="auth-button" class="btn btn-outline">Entrar</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">CEFET/RJ · ACHADOS E PERDIDOS</span>
+        <h1>Perdeu algo?<br><span class="gold">Vamos encontrar.</span></h1>
+        <p>Conectamos quem perdeu um objeto a quem o encontrou. Escolha seu campus e consulte os anúncios.</p>
+      </div>
+      <div class="hero-mark" aria-hidden="true"><div class="lens">⌕</div><div class="spark">✦</div></div>
+    </section>
+
+    <section class="workspace">
+      <div class="campus-row">
+        <label for="campus-filter">Seu campus</label>
+        <select id="campus-filter">
+          <option value="">Todos os campi</option>
+          <option>Maracanã</option><option>Maria da Graça</option><option>Angra dos Reis</option>
+          <option>Itaguaí</option><option>Nova Friburgo</option><option>Nova Iguaçu</option>
+          <option>Petrópolis</option><option>Valença</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button class="action-card active" id="show-search"><span class="action-icon">⌕</span><span><b>Procurar um item</b><small>Veja o que já foi encontrado</small></span></button>
+        <button class="action-card" id="show-create"><span class="action-icon plus">＋</span><span><b>Encontrei um item</b><small>Cadastre um objeto encontrado</small></span></button>
+      </div>
+
+      <section id="search-panel">
+        <div class="section-heading"><div><span class="eyebrow dark">MURAL DE OBJETOS</span><h2>Itens encontrados</h2></div><span id="item-count" class="count">0 anúncios</span></div>
+        <div class="filters">
+          <input id="search-input" type="search" placeholder="Pesquisar por objeto, cor ou descrição…">
+          <select id="category-filter"><option value="">Todas as categorias</option><option>Material escolar</option><option>Eletrônicos</option><option>Documentos</option><option>Roupas e acessórios</option><option>Chaves</option><option>Outros</option></select>
+        </div>
+        <div id="message" class="message" role="status">Conecte o Supabase para carregar os anúncios.</div>
+        <div id="items-grid" class="items-grid"></div>
+      </section>
+
+      <section id="create-panel" class="create-panel hidden">
+        <div class="section-heading"><div><span class="eyebrow dark">AJUDE ALGUÉM A RECUPERAR</span><h2>Cadastrar objeto</h2></div></div>
+        <p class="form-intro">Preencha as informações do objeto. Para publicar, entre ou crie uma conta.</p>
+        <form id="item-form">
+          <div class="form-grid">
+            <label>Nome do objeto<input name="title" required maxlength="70" placeholder="Ex.: Garrafa azul"></label>
+            <label>Campus<select name="campus" required><option value="">Selecione</option><option>Maracanã</option><option>Maria da Graça</option><option>Angra dos Reis</option><option>Itaguaí</option><option>Nova Friburgo</option><option>Nova Iguaçu</option><option>Petrópolis</option><option>Valença</option></select></label>
+            <label>Categoria<select name="category" required><option value="">Selecione</option><option>Material escolar</option><option>Eletrônicos</option><option>Documentos</option><option>Roupas e acessórios</option><option>Chaves</option><option>Outros</option></select></label>
+            <label>Onde foi encontrado?<input name="place" maxlength="100" placeholder="Ex.: Biblioteca, bloco A"></label>
+            <label class="full">Descrição<textarea name="description" required maxlength="600" rows="4" placeholder="Descreva características que ajudem o dono a reconhecer o objeto. Evite divulgar dados pessoais."></textarea></label>
+            <label>Contato para combinar a devolução<input name="contact" required maxlength="100" placeholder="Ex.: @seuinstagram ou telefone"></label>
+            <label>Foto do objeto <span class="optional">(opcional)</span><input name="photo" type="file" accept="image/png,image/jpeg,image/webp"></label>
+          </div>
+          <p class="privacy-note">Atenção: o contato informado ficará visível no anúncio. Não publique documentos, números ou informações pessoais na foto ou descrição.</p>
+          <button class="btn btn-primary" type="submit">Publicar anúncio</button>
+          <p id="form-feedback" class="form-feedback"></p>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <footer><b>AcheiCefetRJ</b><span>Uma comunidade que ajuda a encontrar.</span><small>Projeto independente — não é um canal oficial do CEFET/RJ.</small></footer>
+
+  <dialog id="auth-dialog">
+    <form id="auth-form" method="dialog" class="auth-form">
+      <button type="button" id="close-auth" class="close" aria-label="Fechar">×</button>
+      <span class="eyebrow dark">SUA CONTA</span><h2 id="auth-title">Entrar</h2>
+      <p id="auth-description">Entre para cadastrar e gerenciar seus anúncios.</p>
+      <label>E-mail<input name="email" type="email" required autocomplete="email"></label>
+      <label>Senha<input name="password" type="password" required minlength="6" autocomplete="current-password"></label>
+      <button class="btn btn-primary" id="auth-submit" type="submit">Entrar</button>
+      <button type="button" id="toggle-auth" class="text-button">Ainda não tenho conta. Criar conta</button>
+      <p id="auth-feedback" class="form-feedback"></p>
+    </form>
+  </dialog>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
